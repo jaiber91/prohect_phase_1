@@ -3,53 +3,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/data_project_model.dart';
 import '../providers/card_notifier_provider.dart';
+import '../routes/path_routes.dart';
 import '../templates/base_template.dart';
 import '../widgets/modal_widget.dart';
 
-class DetailScreen extends ConsumerStatefulWidget {
-  final String idCardSelect;
-
-  const DetailScreen({super.key, required this.idCardSelect});
+class DetailScreen extends ConsumerWidget {
+  const DetailScreen({super.key});
 
   @override
-  ConsumerState<DetailScreen> createState() => _DetailScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedCard = ref.watch(selectedCardProvider);
 
-class _DetailScreenState extends ConsumerState<DetailScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final asyncCards = ref.watch(cardProvider);
-
-    return asyncCards.when(
-      data: (cards) => _buildData(cards),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) => Center(child: Text('Error: $e')),
-    );
-  }
-
-  Widget _buildData(List<CardData> cards) {
-    final card = cards.firstWhere(
-      (c) => c.id == widget.idCardSelect,
-      orElse: () => CardData(
-        id: '',
-        title: 'No encontrado',
-        description: '',
-        urlImage: '',
-      ),
-    );
-
-    if (card.id.isEmpty) {
+    if (selectedCard == null || selectedCard.id.isEmpty) {
       return const Scaffold(
         body: Center(child: Text('Card no encontrada')),
       );
     }
 
-    return _buildCardDetail(card);
-  }
-
-  Widget _buildCardDetail(CardData card) {
     return BaseTemplate(
-      titleAppar: card.title,
+      titleAppar: selectedCard.title,
       showLeadingBtnAppar: true,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -57,9 +29,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildCardImage(card),
-              _buildCardDescription(card),
-              _actionsButtons(card),
+              _buildCardImage(selectedCard),
+              _buildCardDescription(selectedCard),
+              _actionsButtons(ref, context, selectedCard),
             ],
           ),
         ),
@@ -92,14 +64,18 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
-  Row _actionsButtons(CardData card) {
+  Row _actionsButtons(WidgetRef ref, BuildContext context, CardData card) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [_buildDeleteButton(card), _editButton(card)],
+      children: [
+        _buildDeleteButton(ref, context, card),
+        _editButton(context, card)
+      ],
     );
   }
 
-  Widget _buildDeleteButton(CardData card) {
+  Widget _buildDeleteButton(
+      WidgetRef ref, BuildContext context, CardData card) {
     return ElevatedButton(
       onPressed: () {
         final navigator = Navigator.of(context);
@@ -113,7 +89,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
           onConfirm: () async {
             await ref.read(cardProvider.notifier).deleteCard(card.id);
 
-            if (!mounted) return;
+            if (!context.mounted) return;
 
             ModalWidget.showSuccess(
               context: context,
@@ -129,10 +105,15 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
-  ElevatedButton _editButton(CardData card) {
+  ElevatedButton _editButton(BuildContext context, CardData card) {
     return ElevatedButton(
       onPressed: () {
         debugPrint('edit ${card.id}');
+        Navigator.pushNamed(
+          context,
+          AppPathsRoutes.form,
+          arguments: true,
+        );
       },
       child: const Text('Editar'),
     );
