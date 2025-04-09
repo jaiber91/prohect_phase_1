@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ModalWidget {
   static Future<void> showConfirmation({
     required BuildContext context,
-    String title = '¿Estás seguro?',
+    String title = '',
     String content = '¿Deseas continuar con esta acción?',
     String cancelText = 'Cancelar',
     String confirmText = 'Aceptar',

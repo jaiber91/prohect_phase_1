@@ -5,20 +5,26 @@ import '../screens/form_screen.dart';
 import 'path_routes.dart';
 
 class AppRoutes {
-  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-    if (settings.name == AppPathsRoutes.details) {
-      final id = settings.arguments as String;
+  static final Map<String, WidgetBuilder> _routes = {
+    AppPathsRoutes.details: (_) => const DetailScreen(),
+  };
+
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    if (settings.name == AppPathsRoutes.form) {
+      final isEdit = settings.arguments as bool? ?? false;
       return MaterialPageRoute(
-        builder: (context) => DetailScreen(idCardSelect: id),
+        builder: (_) => FormScreen(isEdit: isEdit),
       );
     }
 
-    if (settings.name == AppPathsRoutes.form) {
-      return MaterialPageRoute(builder: (context) => const FormScreen());
+    final builder = _routes[settings.name];
+
+    if (builder != null) {
+      return MaterialPageRoute(builder: builder);
     }
 
     return MaterialPageRoute(
-      builder: (context) => const Scaffold(
+      builder: (_) => const Scaffold(
         body: Center(child: Text('Ruta no encontrada')),
       ),
     );

@@ -15,7 +15,9 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
   final List<Widget> _pages = [
     HomeScreen(),
-    FormScreen(),
+    FormScreen(
+      isEdit: false,
+    ),
   ];
 
   @override
