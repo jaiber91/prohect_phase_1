@@ -5,8 +5,22 @@ import '../screens/form_screen.dart';
 import 'path_routes.dart';
 
 class AppRoutes {
-  static Map<String, WidgetBuilder> routes = {
-    AppPathsRoutes.details: (context) => const DetailScreen(),
-    AppPathsRoutes.form: (context) => const FormScreen(),
-  };
+  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    if (settings.name == AppPathsRoutes.details) {
+      final id = settings.arguments as String;
+      return MaterialPageRoute(
+        builder: (context) => DetailScreen(idCardSelect: id),
+      );
+    }
+
+    if (settings.name == AppPathsRoutes.form) {
+      return MaterialPageRoute(builder: (context) => const FormScreen());
+    }
+
+    return MaterialPageRoute(
+      builder: (context) => const Scaffold(
+        body: Center(child: Text('Ruta no encontrada')),
+      ),
+    );
+  }
 }

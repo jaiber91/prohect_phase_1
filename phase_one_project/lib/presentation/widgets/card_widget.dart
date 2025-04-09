@@ -8,8 +8,11 @@ class CardWidget extends StatelessWidget {
   const CardWidget({super.key, required this.item});
 
   void _handleTap(BuildContext context) {
-    print('Card clickeada: ${item.title}');
-    Navigator.pushNamed(context, AppPathsRoutes.details);
+    Navigator.pushNamed(
+      context,
+      AppPathsRoutes.details,
+      arguments: item.id,
+    );
   }
 
   @override
