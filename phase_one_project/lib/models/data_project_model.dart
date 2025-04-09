@@ -1,5 +1,5 @@
 class CardData {
-  final int id;
+  final String id;
   final String title;
   final String description;
   final String urlImage;
@@ -19,4 +19,11 @@ class CardData {
       urlImage: json['url_image'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'description': description,
+        'url_image': urlImage,
+      };
 }
