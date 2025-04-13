@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/color_app.dart';
+
 class ModalWidget {
   static Future<void> showConfirmation({
     required BuildContext context,
@@ -8,7 +10,7 @@ class ModalWidget {
     String cancelText = 'Cancelar',
     String confirmText = 'Aceptar',
     IconData icon = Icons.warning_amber_rounded,
-    Color iconColor = Colors.orange,
+    Color iconColor = AppColors.warning,
     required VoidCallback onConfirm,
   }) {
     return showDialog(
@@ -19,23 +21,33 @@ class ModalWidget {
         title: Text(title),
         content: Text(content),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(cancelText),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-              onConfirm();
-            },
-            child: Text(confirmText),
-          ),
+          _buttonConfirmation(onConfirm, context, cancelText, confirmText),
         ],
       ),
+    );
+  }
+
+  static Row _buttonConfirmation(VoidCallback onConfirm, BuildContext context,
+      String cancelText, String confirmText) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(cancelText),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: AppColors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+            onConfirm();
+          },
+          child: Text(confirmText),
+        ),
+      ],
     );
   }
 
@@ -44,7 +56,7 @@ class ModalWidget {
     String content = 'El elemento fue eliminado exitosamente.',
     String buttonText = 'Aceptar',
     IconData icon = Icons.check_circle_outline,
-    Color iconColor = Colors.green,
+    Color iconColor = AppColors.success,
     required VoidCallback onClose,
   }) {
     return showDialog(
@@ -54,13 +66,22 @@ class ModalWidget {
         icon: Icon(icon, color: iconColor, size: 40),
         content: Text(content),
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              onClose();
-            },
-            child: Text(buttonText),
-          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.white,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  onClose();
+                },
+                child: Text(buttonText),
+              ),
+            ],
+          )
         ],
       ),
     );

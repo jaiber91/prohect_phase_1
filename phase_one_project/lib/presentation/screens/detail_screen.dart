@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/data_project_model.dart';
+import '../../utils/color_app.dart';
 import '../providers/card_notifier_provider.dart';
 import '../routes/path_routes.dart';
 import '../templates/base_template.dart';
@@ -31,6 +32,7 @@ class DetailScreen extends ConsumerWidget {
             children: [
               _buildCardImage(selectedCard),
               _buildCardDescription(selectedCard),
+              _buildCardCategory(selectedCard),
               _actionsButtons(ref, context, selectedCard),
             ],
           ),
@@ -57,11 +59,25 @@ class DetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCardDescription(CardData card) {
+  Padding _buildCardDescription(CardData card) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Text(card.description),
     );
+  }
+
+  Padding _buildCardCategory(CardData card) {
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Column(
+          children: [
+            Text(
+              'Categoría',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+            Text(card.category),
+          ],
+        ));
   }
 
   Row _actionsButtons(WidgetRef ref, BuildContext context, CardData card) {
@@ -74,48 +90,61 @@ class DetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDeleteButton(
+  ElevatedButton _buildDeleteButton(
       WidgetRef ref, BuildContext context, CardData card) {
-    return ElevatedButton(
-      onPressed: () {
-        final navigator = Navigator.of(context);
+    return ElevatedButton.icon(
+      onPressed: () => _handleDeletePressed(ref, context, card),
+      icon: Icon(Icons.delete, color: AppColors.white),
+      label: const Text('Eliminar'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.error,
+        foregroundColor: AppColors.white,
+      ),
+    );
+  }
 
-        ModalWidget.showConfirmation(
+  void _handleDeletePressed(
+      WidgetRef ref, BuildContext context, CardData card) {
+    final navigator = Navigator.of(context);
+
+    ModalWidget.showConfirmation(
+      context: context,
+      title: 'Eliminar tarjeta',
+      content: 'Estás a punto de eliminar esta tarjeta. ¿Deseas continuar?',
+      confirmText: 'Eliminar',
+      iconColor: AppColors.error,
+      onConfirm: () async {
+        await ref.read(cardProvider.notifier).deleteCard(card.id);
+
+        if (!context.mounted) return;
+
+        ModalWidget.showSuccess(
           context: context,
-          title: 'Eliminar tarjeta',
-          content: 'Estás a punto de eliminar esta tarjeta. ¿Deseas continuar?',
-          confirmText: 'Eliminar',
-          iconColor: Colors.red,
-          onConfirm: () async {
-            await ref.read(cardProvider.notifier).deleteCard(card.id);
-
-            if (!context.mounted) return;
-
-            ModalWidget.showSuccess(
-              context: context,
-              content: 'La tarjeta se eliminó correctamente.',
-              onClose: () {
-                navigator.pop();
-              },
-            );
-          },
+          content: 'La tarjeta se eliminó correctamente.',
+          onClose: () => navigator.pop(),
         );
       },
-      child: const Text('Eliminar'),
     );
   }
 
   ElevatedButton _editButton(BuildContext context, CardData card) {
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: () {
-        debugPrint('edit ${card.id}');
         Navigator.pushNamed(
           context,
           AppPathsRoutes.form,
           arguments: true,
         );
       },
-      child: const Text('Editar'),
+      label: const Text('Editar'),
+      icon: Icon(
+        Icons.edit,
+        color: AppColors.white,
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.white,
+      ),
     );
   }
 }

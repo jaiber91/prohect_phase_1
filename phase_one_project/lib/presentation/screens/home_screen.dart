@@ -12,7 +12,7 @@ class HomeScreen extends ConsumerWidget {
     final cardAsync = ref.watch(cardProvider);
 
     return BaseTemplate(
-      titleAppar: 'Home screen page',
+      titleAppar: 'Lista de tarjetas',
       showLeadingBtnAppar: false,
       body: cardAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -26,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
             itemCount: cards.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(10),
                 child: CardWidget(item: cards[index]),
               );
             },
