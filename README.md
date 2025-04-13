@@ -11,6 +11,7 @@ App para listar gatos. La data inicial se carga desde un json, pero se puede agr
 ## Estructura de carpetas
 La siguientes estructura se hace pensando en que la app no va a crecer demasiado y la persistencia de los datos dependen del local storage del dispositivo.
 
+```bash
 .
 └── lib/
     ├── assets/
@@ -44,7 +45,7 @@ La siguientes estructura se hace pensando en que la app no va a crecer demasiado
     │   └── form_validators
     └── main.dart
 
-
+```
 ## Paso para ejecutar el proyecto
 
 - Clonar el repositorio
