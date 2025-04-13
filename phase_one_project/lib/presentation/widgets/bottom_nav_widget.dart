@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/color_app.dart';
 import '../screens/form_screen.dart';
 import '../screens/home_screen.dart';
 
@@ -30,10 +31,18 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.gray,
+        backgroundColor: AppColors.white,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: 'Formulario'),
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Agregar',
+          ),
         ],
       ),
     );

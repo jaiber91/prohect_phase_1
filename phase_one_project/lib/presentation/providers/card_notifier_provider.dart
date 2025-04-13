@@ -36,9 +36,10 @@ class CardNotifier extends AsyncNotifier<List<CardData>> {
       (c) => c.id == id,
       orElse: () => CardData(
         id: '',
-        title: 'No encontrado',
+        title: '',
         description: '',
         urlImage: '',
+        category: '',
       ),
     );
 
